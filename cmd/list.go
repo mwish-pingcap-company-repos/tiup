@@ -125,7 +125,11 @@ func showComponentVersions(component string, onlyInstalled bool) error {
 	cmpTable = append(cmpTable, []string{"Version", "Installed", "Release:", "Platforms"})
 
 	installed := set.NewStringSet(versions...)
-	for _, ver := range manifest.Versions {
+	released := manifest.Versions
+	if manifest.Nightly != nil {
+		released = append(released, *manifest.Nightly)
+	}
+	for _, ver := range released {
 		version := ver.Version.String()
 		if onlyInstalled && !installed.Exist(version) {
 			continue
